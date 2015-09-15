@@ -147,9 +147,40 @@ int * fromNumberToArray(int number)
 	return arrDigits;
 }
 
+int create_socket()
+/*
+	Function that create the server socker and wait for connection from the client.
+*/
+{
+	int sock; 
+	int connect_sock; 
+	struct sockaddr_in serv_name; 
+	size_t len; 
+	int count;
+
+	sock = socket(AF_INET, SOCK_STREAM, 0);  
+	if (sock < 0)
+	{ perror ("Error opening channel");
+	  clean_up(1, &sock);
+	}
+
+	bzero(&serv_name, sizeof(serv_name)); 
+	serv_name.sin_family = AF_INET;                                   
+	serv_name.sin_port = htons(PORT); 
+
+	if (bind(sock, (struct sockaddr *)&serv_name, sizeof(serv_name)) < 0)
+	{ perror ("Error naming channel");
+	  clean_up(1, &sock);
+	}
+	  
+	printf("Server is alive and waiting for socket connection from client.\n");
+	listen(sock, 1); 
+}
 
 int main()
 {
+	int connect_sock = create_socket();
+
 	int currGuess;
 
 	generateCode();
