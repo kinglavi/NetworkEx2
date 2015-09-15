@@ -50,7 +50,7 @@ int main(void)
   len = sizeof(serv_name);
   connect_sock = accept(sock, (struct sockaddr *)&serv_name, &len); // Extract the first connection on the queue.
 
-  char bla = "blablabla"
+  char bla = "blablabla";
 
   // Writing dara 10 times. Each time we write 4 bytes.
   for (count = 1; count <= SIM_LENGTH; count++)
