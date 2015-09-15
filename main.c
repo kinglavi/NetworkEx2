@@ -149,7 +149,7 @@ int * fromNumberToArray(int number)
 
 int create_socket()
 /*
-	Function that create the server socker and wait for connection from the client.
+	Function that create the server socket and wait for connection from the client.
 */
 {
 	int sock; 
@@ -175,6 +175,9 @@ int create_socket()
 	  
 	printf("Server is alive and waiting for socket connection from client.\n");
 	listen(sock, 1); 
+
+	len = sizeof(serv_name);
+ 	connect_sock = accept(sock, (struct sockaddr *)&serv_name, &len); // Extract the first connection on the queue.
 }
 
 int main()
@@ -184,6 +187,8 @@ int main()
 	int currGuess;
 
 	generateCode();
+	char enterDigits = "please enter a 4 digits number\n";
+	write(connect_sock,&enterDigits, sizeof(enterDigits))
 
 	printf("please enter a 4 digits number\n");
 
