@@ -62,20 +62,34 @@ int main(int argc, char* argv[])
   // Print the command to the user from the server
   read(sock,buffer,sizeof(buffer));
   printf("%s",buffer);
+  printf("If you want to exit insert -1\n" );
 
   // Read the guess input from the user.
   scanf("%d",&currGuess);
-  // Send the user input to the server.
-  write(sock,&currGuess,sizeof(buffer));
+ 
+  // Wait until the user exit or the server closed the connect so the user won.
+  while (currGuess != -1)
+  {
+    // Send the user input to the server.
+    write(sock,&currGuess,sizeof(buffer));
+    buffer[0] = "\0";
+    // Read the resultAnswer from the server
+    read(sock,buffer,sizeof(buffer));
+    printf("%s\n",buffer );
 
-  //while (read(sock,buffer,sizeof(buffer)))
+    // Print the command to the user from the server
+    read(sock,buffer,sizeof(buffer));
+    printf("%s",buffer);
+    printf("If you want to exit insert -1\n" );
+
+    // Read the guess input from the user.
+    scanf("%d",&currGuess);
+  }
 
 
-  // Try to read the socket 10 time. each time 4 bytes.
-  for (count = 1; count <= SIM_LENGTH; count++)
-    { read(sock, &value, 4);
-      printf("Client has received %d from socket.\n", value);
-    }
+  buffer[0] = '\0';
+  read(sock,buffer,sizeof(buffer));
+  printf("%s",buffer);
 
   printf("Exiting now.\n");
 
@@ -83,3 +97,20 @@ int main(int argc, char* argv[])
   exit(0); 
 
 } 
+
+void print_turn_result(int sock)
+/* 
+  This function read result from the server and print it to the user.
+*/
+{
+  char buffer[512];
+  // Read the result array
+  read(sock,buffer,sizeof(buffer));
+  // Print the result array. yesh mahav harih lishtamesh bprint4digitsAraay
+  printf("%s", buffer);
+  // Clean the buffer
+  buffer[0] = '\0';
+  // Bul Pgiha result
+  read(sock,buffer,sizeof(buffer));
+  //
+}

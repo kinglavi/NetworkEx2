@@ -19,7 +19,7 @@ int pgiha = 0;
 void checkGuess(int *guess);
 void generateCode();
 void initializeCodeArray();
-void print4DigitArray(char *arr);
+char* print4DigitArray(char *arr);
 void initializeResultArray();
 void initializeCodeArray();
 int isOriginalNumber(int digit);
@@ -144,14 +144,19 @@ void initializeResultArray()
 	}
 }
 
-void print4DigitArray(char *arr)
+char* print4DigitArray(char *arr)
 {
-	printf("%c %c %c %c\n",arr[0],arr[1],arr[2],arr[3]);
+	// Ain li kaoh lihtuv nahun...
+	char str[512/4];
+	sprintf(str,"%c %c %c %c\n",arr[0],arr[1],arr[2],arr[3]);
+	return str;
 }
 
-void printBulPgiha()
+char* printBulPgiha()
 {
-	printf("bul: %d pgiha:%d \n",bul,pgiha);
+	char* str[512/4];
+	sprintf(str,"bul: %d pgiha:%d \n",bul,pgiha);
+	return str;
 }
 
 int * fromNumberToArray(int number)
@@ -217,19 +222,39 @@ int main()
 	while(!isWinner(guess))
 	{
 		checkGuess(guess);
-		print4DigitArray(resultArray);
-		printBulPgiha();
-		printf("attempts: %d\n",attempts);
 
-		printf("please enter a 4 digits number\n");
-		scanf("%d",&currGuess);
-		guess = fromNumberToArray(currGuess);
+		// Concatenate the string result.
+		char *resultArray = print4DigitArray(resultArray);
+		char *bulPgiha = printBulPgiha();
+		char* attemptsString[512/4];
+		sprintf(attemptsString,"attempts: %d\n",attempts);
+
+
+		strcpy(buffer, &resultArray);
+		strcat(buffer, &bulPgiha);
+		strcat(buffer, &attemptsString);
+
+		// Write the turnResult to the client.
+		write(connect_sock,&buffer, sizeof(buffer));
+
+		// Start a new turn....
+		char enterDigits[] = "please enter a 4 digits number\n";
+		// Send a command to the client.
+		write(connect_sock,&enterDigits, sizeof(enterDigits));
+		// Read the guess number from the client
+		read(connect_sock,&currGuess,sizeof(buffer));
+
+		int* guess = fromNumberToArray(currGuess);
 	}
+
+	buffer[0] = '\0';
+	strcpy(buffer, "winner!")
+
+	write(connect_sock,buffer,sizeof(buffer))
 
 	// Close the socket
 	close(connect_sock);
 	//clean_up(0,&sock);
-	printf("winner!");
 
 	return 0;
 }
