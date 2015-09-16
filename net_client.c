@@ -54,10 +54,12 @@ int main(int argc, char* argv[])
       exit(3);
     }
 
+  char buffer[512];
+
   // Try to read the socket 10 time. each time 4 bytes.
   for (count = 1; count <= SIM_LENGTH; count++)
-    { read(sock, &value, 4);
-      printf("Client has received %d from socket.\n", value);
+    { read(sock, buffer, sizeof(buffer));
+      printf("Client has received %s from socket.\n", buffer);
     }
 
   printf("Exiting now.\n");
