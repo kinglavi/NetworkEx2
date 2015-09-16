@@ -1,5 +1,14 @@
-
+#include <sys/types.h>
+#include <unistd.h>          
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <signal.h>     
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <netinet/in.h>
+#define SIM_LENGTH 10 
+#define PORT 1337 
 
 int code[4] = {-1,-1,-1,-1};
 char resultArray[4] = {'_','_','_','_'};
@@ -7,7 +16,6 @@ int attempts = 0;
 int bul = 0;
 int pgiha = 0;
 
-int create_socket();
 void checkGuess(int *guess);
 void generateCode();
 void initializeCodeArray();
@@ -17,6 +25,16 @@ void initializeCodeArray();
 int isOriginalNumber(int digit);
 int isWinner(int *guess);
 int * fromNumberToArray(int number);
+void clean_up(int cond, int *sock);
+int create_socket();
+
+void clean_up(int cond, int *sock)
+/* This function close the connection
+*/
+{ printf("Exiting now.\n");
+  close(*sock); 
+  exit(cond);
+} 
 
 // This function receives a guess array and updates the bul and pgihas
 // variables accordingly
@@ -179,6 +197,7 @@ int create_socket()
 
 	len = sizeof(serv_name);
  	connect_sock = accept(sock, (struct sockaddr *)&serv_name, &len); // Extract the first connection on the queue.
+	return connect_sock;
 }
 
 int main()
@@ -188,11 +207,11 @@ int main()
 	int currGuess;
 
 	generateCode();
-	char enterDigit[] = "please enter a 4 digits number\n";
+	char enterDigits[] = "please enter a 4 digits number\n";
 	// Send a command to the client.
 	write(connect_sock,&enterDigits, sizeof(enterDigits));
 	// Read the guess number from the client
-	read(connect_sock,currGuess,sizeof(buffer));
+	read(connect_sock,&currGuess,sizeof(buffer));
 
 	int* guess = fromNumberToArray(currGuess);
 	while(!isWinner(guess))
@@ -209,7 +228,7 @@ int main()
 
 	// Close the socket
 	close(connect_sock);
-	clean_up(0,&sock);
+	//clean_up(0,&sock);
 	printf("winner!");
 
 	return 0;
