@@ -49,13 +49,14 @@ int main(void)
 
   len = sizeof(serv_name);
   connect_sock = accept(sock, (struct sockaddr *)&serv_name, &len); // Extract the first connection on the queue.
-
-  char bla = "blablabla";
+  char buffer[512];
+  char bla[] = "blablabla";
+  strcpy(buffer,bla);
 
   // Writing dara 10 times. Each time we write 4 bytes.
   for (count = 1; count <= SIM_LENGTH; count++)
-    { write(connect_sock, &bla, sizeof(bla));
-      printf("Server has written %d to socket.\n", count);
+    { write(connect_sock, bla, strlen(buffer));
+      printf("Server has written %s to socket.\n", bla);
     }
 
   close(connect_sock); // Close the socket
