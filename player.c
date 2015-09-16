@@ -13,6 +13,8 @@
 #define SIM_LENGTH 10 
 #define PORT 1337 
 
+int connect_socket(server_name)
+
 int main(int argc, char* argv[])
 { 
   int sock; 
@@ -53,6 +55,21 @@ int main(int argc, char* argv[])
       close(sock);
       exit(3);
     }
+
+  char buffer[512];
+  int currGuess;
+
+  // Print the command to the user from the server
+  server_answer = read(sock,buffer,sizeof(buffer));
+  printf(server_answer);
+
+  // Read the guess input from the user.
+  scanf("%d",&currGuess);
+  // Send the user input to the server.
+  write(sock,currGuess,sizeof(buffer))
+
+  while (read(sock,buffer,sizeof(buffer)))
+
 
   // Try to read the socket 10 time. each time 4 bytes.
   for (count = 1; count <= SIM_LENGTH; count++)

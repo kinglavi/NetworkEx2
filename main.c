@@ -7,6 +7,7 @@ int attempts = 0;
 int bul = 0;
 int pgiha = 0;
 
+int create_socket();
 void checkGuess(int *guess);
 void generateCode();
 void initializeCodeArray();
@@ -183,16 +184,16 @@ int create_socket()
 int main()
 {
 	int connect_sock = create_socket();
-
+	char buffer[512];
 	int currGuess;
 
 	generateCode();
-	char enterDigits = "please enter a 4 digits number\n";
-	write(connect_sock,&enterDigits, sizeof(enterDigits))
+	char enterDigit[] = "please enter a 4 digits number\n";
+	// Send a command to the client.
+	write(connect_sock,&enterDigits, sizeof(enterDigits));
+	// Read the guess number from the client
+	read(connect_sock,currGuess,sizeof(buffer));
 
-	printf("please enter a 4 digits number\n");
-
-	scanf("%d",&currGuess);
 	int* guess = fromNumberToArray(currGuess);
 	while(!isWinner(guess))
 	{
@@ -206,6 +207,9 @@ int main()
 		guess = fromNumberToArray(currGuess);
 	}
 
+	// Close the socket
+	close(connect_sock);
+	clean_up(0,&sock);
 	printf("winner!");
 
 	return 0;
