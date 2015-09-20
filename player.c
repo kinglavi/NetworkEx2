@@ -11,7 +11,7 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #define SIM_LENGTH 10 
-#define PORT 1337 
+#define PORT 1337
 
 
 int main(int argc, char* argv[])
@@ -71,8 +71,8 @@ int main(int argc, char* argv[])
   while (currGuess != -1)
   {
     // Send the user input to the server.
-    write(sock,&currGuess,sizeof(buffer));
-    buffer[0] = "\0";
+    write(sock,&currGuess,sizeof(int));
+    buffer[0] = '\0';
     // Read the resultAnswer from the server
     read(sock,buffer,sizeof(buffer));
     printf("%s\n",buffer );

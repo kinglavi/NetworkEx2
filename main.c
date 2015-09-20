@@ -8,7 +8,7 @@
 #include <sys/un.h>
 #include <netinet/in.h>
 #define SIM_LENGTH 10 
-#define PORT 1337 
+#define PORT 1337
 
 int code[4] = {-1,-1,-1,-1};
 char resultArray[4] = {'_','_','_','_'};
@@ -147,14 +147,15 @@ void initializeResultArray()
 char* print4DigitArray(char *arr)
 {
 	// Ain li kaoh lihtuv nahun...
-	char str[512/4];
+	char *str = malloc(512/4);
+	printf("%c %c %c %c\n",arr[0],arr[1],arr[2],arr[3]);
 	sprintf(str,"%c %c %c %c\n",arr[0],arr[1],arr[2],arr[3]);
 	return str;
 }
 
 char* printBulPgiha()
 {
-	char* str[512/4];
+	char* str = malloc(512/4);
 	sprintf(str,"bul: %d pgiha:%d \n",bul,pgiha);
 	return str;
 }
@@ -215,42 +216,44 @@ int main()
 	char enterDigits[] = "please enter a 4 digits number\n";
 	// Send a command to the client.
 	write(connect_sock,&enterDigits, sizeof(enterDigits));
+	
 	// Read the guess number from the client
-	read(connect_sock,&currGuess,sizeof(buffer));
-
+	read(connect_sock,&currGuess,sizeof(int));
+	
 	int* guess = fromNumberToArray(currGuess);
 	while(!isWinner(guess))
 	{
+		buffer[0] = '\0';
 		checkGuess(guess);
-
+		
 		// Concatenate the string result.
 		char *resultArray = print4DigitArray(resultArray);
 		char *bulPgiha = printBulPgiha();
-		char* attemptsString[512/4];
+		char attemptsString[512/4];
 		sprintf(attemptsString,"attempts: %d\n",attempts);
 
-
-		strcpy(buffer, &resultArray);
-		strcat(buffer, &bulPgiha);
-		strcat(buffer, &attemptsString);
+		strcpy(buffer, resultArray);
+		strcat(buffer, bulPgiha);
+		strcat(buffer, attemptsString);
 
 		// Write the turnResult to the client.
+		printf("%s",buffer);
 		write(connect_sock,&buffer, sizeof(buffer));
 
 		// Start a new turn....
 		char enterDigits[] = "please enter a 4 digits number\n";
 		// Send a command to the client.
-		write(connect_sock,&enterDigits, sizeof(enterDigits));
+		write(connect_sock,&enterDigits, sizeof(buffer));
 		// Read the guess number from the client
-		read(connect_sock,&currGuess,sizeof(buffer));
+		read(connect_sock,&currGuess,sizeof(int));
 
 		int* guess = fromNumberToArray(currGuess);
 	}
 
 	buffer[0] = '\0';
-	strcpy(buffer, "winner!")
+	strcpy(buffer, "winner!");
 
-	write(connect_sock,buffer,sizeof(buffer))
+	write(connect_sock,buffer,sizeof(buffer));
 
 	// Close the socket
 	close(connect_sock);
