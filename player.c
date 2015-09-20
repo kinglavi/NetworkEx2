@@ -68,7 +68,7 @@ int main(int argc, char* argv[])
   scanf("%d",&currGuess);
  
   // Wait until the user exit or the server closed the connect so the user won.
-  while (currGuess != -1)
+  while (currGuess != -1 && (strcmp(buffer,"winner!") != 0))
   {
     // Send the user input to the server.
     write(sock,&currGuess,sizeof(int));

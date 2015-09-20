@@ -148,7 +148,6 @@ char* print4DigitArray(char *arr)
 {
 	// Ain li kaoh lihtuv nahun...
 	char *str = malloc(512/4);
-	printf("%c %c %c %c\n",arr[0],arr[1],arr[2],arr[3]);
 	sprintf(str,"%c %c %c %c\n",arr[0],arr[1],arr[2],arr[3]);
 	return str;
 }
