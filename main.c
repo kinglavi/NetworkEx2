@@ -227,12 +227,12 @@ int main()
 		checkGuess(guess);
 		
 		// Concatenate the string result.
-		char *resultArray = print4DigitArray(resultArray);
+		char *resultArrayString = print4DigitArray(resultArray);
 		char *bulPgiha = printBulPgiha();
 		char attemptsString[512/4];
 		sprintf(attemptsString,"attempts: %d\n",attempts);
 
-		strcpy(buffer, resultArray);
+		strcpy(buffer, resultArrayString);
 		strcat(buffer, bulPgiha);
 		strcat(buffer, attemptsString);
 
