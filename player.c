@@ -56,7 +56,7 @@ int main(int argc, char* argv[])
     }
 
   char buffer[512];
-  int currGuess;
+  int currGuess = -2;
   //char *server_answer;
 
   // Print the command to the user from the server
