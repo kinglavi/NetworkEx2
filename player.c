@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
   
   // Get the information of the server by his hostname. Save result to server_info.
   if (0 != getaddrinfo(argv[1], NULL, NULL, &server_info)) {
-	// Exit if error accourd.
+  // Exit if error accourd.
     fprintf(stderr, "Error in resolving hostname %s\n", argv[1]);
     exit(1);
   }
@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
       
   // Get the address of the host
   hostaddr = inet_ntoa(((struct sockaddr_in*)server_info->ai_addr)->sin_addr);
-	  
+    
   bzero(&cli_name, sizeof(cli_name)); // Initialize the cli_name to null (0)
   cli_name.sin_family = AF_INET; // Initialize domain as AF_INET
   cli_name.sin_addr.s_addr = inet_addr(hostaddr); // Initialize the ip address of the server
@@ -55,28 +55,12 @@ int main(int argc, char* argv[])
       exit(3);
     }
 
-  char buffer[512];
+  char buffer[512] = "";
   int currGuess = -2;
-  //char *server_answer;
-
-  // Print the command to the user from the server
-  read(sock,buffer,sizeof(buffer));
-  printf("%s",buffer);
-  printf("If you want to exit insert -1\n" );
-
-  // Read the guess input from the user.
-  scanf("%d",&currGuess);
  
   // Wait until the user exit or the server closed the connect so the user won.
   while (currGuess != -1 && (strcmp(buffer,"winner!") != 0))
   {
-    // Send the user input to the server.
-    write(sock,&currGuess,sizeof(int));
-    buffer[0] = '\0';
-    // Read the resultAnswer from the server
-    read(sock,buffer,sizeof(buffer));
-    printf("%s\n",buffer );
-
     // Print the command to the user from the server
     read(sock,buffer,sizeof(buffer));
     printf("%s",buffer);
@@ -84,6 +68,13 @@ int main(int argc, char* argv[])
 
     // Read the guess input from the user.
     scanf("%d",&currGuess);
+
+    // Send the user input to the server.
+    write(sock,&currGuess,sizeof(int));
+    buffer[0] = '\0';
+    // Read the resultAnswer from the server
+    read(sock,buffer,sizeof(buffer));
+    printf("%s\n",buffer );
   }
 
 
